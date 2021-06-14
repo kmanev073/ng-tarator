@@ -16,7 +16,15 @@ export class StoreService<S = any> {
     this.state = this.stateSubject.asObservable();
   }
 
+  private callback(state: S): void {
+    this.stateSubject.next(state)
+  }
+
   apply<D = any>(action: Action<S, D>, data?: D) {
-    action.execute(this.stateObject as S, () => this.stateSubject.next(this.stateObject as S), data);
+    try {
+      action.execute(this.stateObject as S, () => this.callback(this.stateObject as S), data);
+    } catch (exception) {
+      console.log('An exception was thrown while executing tarator action (possible inconsistent state):', exception);
+    }
   }
 }

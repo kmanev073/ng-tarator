@@ -16,4 +16,6 @@ export class SimpleAction<S = any, D = any> implements Action{
     }
     callback();
   }
+
+  static id: SimpleAction = new SimpleAction(() => {});
 }

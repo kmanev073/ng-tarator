@@ -1,30 +1,54 @@
-import { Injectable, Optional } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 import { Action } from '../interfaces/action.interface';
+
+export const TaratorState = new InjectionToken<any>('TaratorState', {
+  providedIn: 'root',
+  factory: () => {}
+});
+
+export const TaratorStateLogLength = new InjectionToken<any>('TaratorStateLogLength', {
+  providedIn: 'root',
+  factory: () => 0
+});
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoreService<S = any> {
   
-  private readonly stateSubject: BehaviorSubject<S>;
+  private readonly stateChangedSubject: Subject<void> = new Subject();
   
-  readonly state: Observable<S>;
+  public readonly stateChanged: Observable<void> = this.stateChangedSubject.asObservable();
 
-  constructor(@Optional() private readonly stateObject: Object) {
-    this.stateSubject = new BehaviorSubject<S>(stateObject as S);
-    this.state = this.stateSubject.asObservable();
-  }
+  private readonly stateLog: string[] = [];
+  
+  constructor(@Inject(TaratorState) private readonly stateObject: S, @Inject(TaratorStateLogLength) private readonly stateLogLength: number = 0) {
+    if (stateLogLength) {
+      this.stateLogLength = stateLogLength;
+    }
 
-  private callback(state: S): void {
-    this.stateSubject.next(state)
+    if (stateLogLength) {
+      this.stateLog.push(JSON.stringify(stateObject));
+    }
   }
 
   apply<D = any>(action: Action<S, D>, data?: D) {
     try {
-      action.execute(this.stateObject as S, () => this.callback(this.stateObject as S), data);
+      action.execute(this.stateObject, this.afterActionApplied, data);
     } catch (exception) {
       console.log('An exception was thrown while executing tarator action (possible inconsistent state):', exception);
     }
+  }
+
+  public afterActionApplied = () => {
+    if (this.stateLogLength) {
+      if (this.stateLog.length >= this.stateLogLength){
+        this.stateLog.shift();
+      }
+      this.stateLog.push(JSON.stringify(this.stateObject)); 
+    }
+
+    this.stateChangedSubject.next();
   }
 }

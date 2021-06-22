@@ -1,22 +1,26 @@
 import { TestBed } from "@angular/core/testing";
 import { NgTaratorModule } from "../ng-tarator.module";
-import { StoreService } from "../services/store.service";
+import { StoreService, TaratorState } from "../services/store.service";
 import { SimpleAction } from "./simple-action";
 
 describe('SimpleAction', () => {
+  let state: object;
   let service: StoreService;
-  let initialState = {};
+
+  let initialState = {
+    initialState: true
+  };
 
   beforeEach(() => {
-    initialState = {
-      initialState: true
-    };
-
     TestBed.configureTestingModule({
       imports: [
-        NgTaratorModule.forRoot(initialState)
+        NgTaratorModule
+      ],
+      providers: [
+        { provide: TaratorState, useValue: initialState }
       ]
     });
+    state = TestBed.inject(TaratorState);
     service = TestBed.inject(StoreService);
   });
 
@@ -26,32 +30,25 @@ describe('SimpleAction', () => {
 
   describe('id', () => {
 
-    it ('should not modify the state reference',  (done: DoneFn) => {
+    it ('should not modify the state reference',  () => {
       //arrange
 
       //act
       service.apply(SimpleAction.id);
 
       //assert
-      service.state.subscribe(state => {
-        expect(state).toBe(initialState);
-        done();
-      });
+      expect(state).toBe(initialState);
     }); 
 
-    it('should not modify the state object', (done: DoneFn) => {
+    it('should not modify the state object', () => {
       //arrange
 
       //act
       service.apply(SimpleAction.id);
 
       //assert
-      service.state.subscribe(state => {
-
-        expect(state).toEqual({
-          initialState: true
-        });
-        done();
+      expect(state).toEqual({
+        initialState: true
       });
     });
   });

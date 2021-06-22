@@ -1,194 +1,392 @@
 import { TestBed } from '@angular/core/testing';
 import { SimpleAction } from '../action-implementations/simple-action';
 import { NgTaratorModule } from '../ng-tarator.module';
-
-import { StoreService } from './store.service';
+import { StoreService, TaratorState } from './store.service';
 
 describe('StoreService', () => {
   let service: StoreService;
-  let initialState = {};
 
-  beforeEach(() => {
-    initialState = {
+  describe('state is primitive value', () => {
+    let state: number;
+    let initialState = 6;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgTaratorModule
+        ],
+        providers: [
+          { provide: TaratorState, useValue: initialState }
+        ]
+      });
+      state = TestBed.inject(TaratorState);
+      service = TestBed.inject(StoreService);
+      initialState = 6;
+    });
+
+    it('should be created', () => {
+      //arrange
+
+      //act
+
+      //assert
+      expect(service).toBeTruthy();
+    });
+
+    it('should use the state provided on initialization', () => {
+      //arrange
+
+      //act
+        
+      //assert
+      expect(state).toBe(initialState);
+    });
+  });
+
+  describe('state is array of primitive values', () => {
+    let state: number[];
+    let initialState = [1, 2, 3];
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgTaratorModule
+        ],
+        providers: [
+          { provide: TaratorState, useValue: initialState }
+        ]
+      });
+      state = TestBed.inject(TaratorState);
+      service = TestBed.inject(StoreService);
+      initialState[0] = 1;
+      initialState[1] = 2;
+      initialState[2] = 3;
+    });
+
+    it('should be created', () => {
+      //arrange
+
+      //act
+
+      //assert
+      expect(service).toBeTruthy();
+    });
+  });
+
+  describe('state is object', () => {
+    let state: object;
+    let initialState = {
       initialState: true
     };
 
-    TestBed.configureTestingModule({
-      imports: [
-        NgTaratorModule.forRoot(initialState)
-      ]
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgTaratorModule
+        ],
+        providers: [
+          { provide: TaratorState, useValue: initialState }
+        ]
+      });
+      state = TestBed.inject(TaratorState);
+      service = TestBed.inject(StoreService);
+      initialState.initialState = true;
     });
-    service = TestBed.inject(StoreService);
-  });
 
-  it('should be created', () => {
-    //arrange
+    it('should be created', () => {
+      //arrange
 
-    //act
+      //act
 
-    //assert
-    expect(service).toBeTruthy();
-  });
+      //assert
+      expect(service).toBeTruthy();
+    });
 
-  it('should use the state object provided on initialization', (done: DoneFn) => {
-    //arrange
+    it('should use the state object provided on initialization', () => {
+      //arrange
 
-    //act
-    service.state.subscribe(state => {
-      
+      //act
+        
       //assert
       expect(state).toBe(initialState);
-      done();
     });
-  });
 
-  it('should not modify the initial state object on initialization', (done: DoneFn) => {
-    //arrange
+    it('should not modify the initial state object on initialization', () => {
+      //arrange
 
-    //act
-    service.state.subscribe(state => {
-      
+      //act
+        
       //assert
       expect(state).toEqual({
         initialState: true
       });
-      done();
     });
-  });
 
-  describe('apply', () => {
+    describe('apply', () => {
 
-    it ('should not modify the state reference', (done: DoneFn) => {
-      //arrange
-      const action = new SimpleAction(() => {});
+      it ('should not modify the state reference', () => {
+        //arrange
+        const action = new SimpleAction(() => {});
 
-      //act
-      service.apply(action);
+        //act
+        service.apply(action);
 
-      //assert
-      service.state.subscribe(state => {
+        //assert
         expect(state).toBe(initialState);
-        done();
       });
-    }); 
 
-    it ('should not modify the state object', (done: DoneFn) => {
-      //arrange
-      const action = new SimpleAction(() => {});
+      it ('should not modify the state object', () => {
+        //arrange
+        const action = new SimpleAction(() => {});
 
-      //act
-      service.apply(action);
+        //act
+        service.apply(action);
 
-      //assert
-      service.state.subscribe(state => {
+        //assert
         expect(state).toEqual({
           initialState: true
         });
-        done();
+      }); 
+
+      it ('should not throw exceptions', () => {
+        //arrange
+        const action = new SimpleAction(() => {});
+        const func = () => service.apply(action);
+
+        //act
+        //assert
+        expect(func).not.toThrow();
+      }); 
+
+      it ('should execute action', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        
+        //act
+        service.apply(actionSpy);
+        
+        //assert
+        expect(actionSpy.execute).toHaveBeenCalled();
       });
-    }); 
 
-    it ('should execute action', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      
-      //act
-      service.apply(actionSpy);
-      
-      //assert
-      expect(actionSpy.execute).toHaveBeenCalled();
+      it ('should execute action only once', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        
+        //act
+        service.apply(actionSpy);
+        
+        //assert
+        expect(actionSpy.execute).toHaveBeenCalledTimes(1);
+      });
+
+      it ('should pass state object to the executed action', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        
+        //act
+        service.apply(actionSpy);
+        
+        //assert
+        expect(actionSpy.execute.calls.mostRecent().args[0]).toEqual(initialState);
+      });
+
+      it ('should pass callback to the executed action', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        
+        //act
+        service.apply(actionSpy);
+        
+        //assert
+        expect(actionSpy.execute.calls.mostRecent().args[1]).toBeDefined();
+      });
+
+      it ('should pass data by reference to the executed action', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        const data = {
+          internal: 5
+        }
+        
+        //act
+        service.apply(actionSpy, data);
+        
+        //assert
+        expect(actionSpy.execute.calls.mostRecent().args[2]).toBe(data);
+      });
+
+      it ('should pass correct data to the executed action', () => {
+        //arrange
+        const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
+        
+        //act
+        service.apply(actionSpy, {
+          internal: 5
+        });
+        
+        //assert
+        expect(actionSpy.execute.calls.mostRecent().args[2]).toEqual({
+          internal: 5
+        });
+      });
+
+      it ('should pass callable and correctly bound callback', () => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            callback();
+          }
+        };
+        spyOn(service, 'afterActionApplied');
+
+        //act
+        service.apply(actionMock);
+
+        //assert
+        expect(service.afterActionApplied).toHaveBeenCalled();      
+      });
+
+      it ('should trigger state update after applied action calls the callback', () => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            callback();
+          }
+        };
+        const stateChangedSubject = (service as any).stateChangedSubject;
+        spyOn(stateChangedSubject, 'next');
+
+        //act
+        service.apply(actionMock);
+
+        //assert
+        expect(stateChangedSubject.next).toHaveBeenCalled();      
+      });
+
+      it ('should update state only once after applied action calls the callback', () => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            callback();
+          }
+        };
+        const stateChangedSubject = (service as any).stateChangedSubject;
+        spyOn(stateChangedSubject, 'next');
+
+        //act
+        service.apply(actionMock);
+
+        //assert
+        expect(stateChangedSubject.next).toHaveBeenCalledTimes(1);      
+      });
+
+      it ('should trigger the state changed observable after applying action', (done: DoneFn) => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            state.initialState = false;
+            callback();
+          }
+        };
+
+        service.stateChanged.subscribe(() => {
+          //assert
+          expect((state as any).initialState).toEqual(false);
+          done();
+        });
+
+        //act
+        service.apply(actionMock); 
+      });
+
+      it ('should keep the initial state object reference after applying action', (done: DoneFn) => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            callback();
+          }
+        };
+
+        service.stateChanged.subscribe(() => {
+          //assert
+          expect(state).toBe(initialState);
+          done();
+        });
+
+        //act
+        service.apply(actionMock); 
+      });
+
+      it ('should keep working after applying faulty action', () => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            throw new Error();
+          }
+        };
+        const func = () => service.apply(actionMock);
+        
+        //act
+        //assert
+        expect(func).not.toThrow();      
+      });
+
+      it ('should log an error to the console after applying faulty action', () => {
+        //arrange
+        const actionMock = {
+          execute: (state: any, callback: () => void, data?: any): void => {
+            throw new Error();
+          }
+        };
+        spyOn(console, 'log');
+
+        //act
+        service.apply(actionMock);
+
+        //assert
+        expect(console.log).toHaveBeenCalled();
+      });
     });
+  });
 
-    it ('should execute action only once', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      
-      //act
-      service.apply(actionSpy);
-      
-      //assert
-      expect(actionSpy.execute).toHaveBeenCalledTimes(1);
-    });
-
-    it ('should pass state object to the executed action', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      
-      //act
-      service.apply(actionSpy);
-      
-      //assert
-      expect(actionSpy.execute.calls.mostRecent().args[0]).toEqual(initialState);
-    });
-
-    it ('should pass callback to the executed action', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      
-      //act
-      service.apply(actionSpy);
-      
-      //assert
-      expect(actionSpy.execute.calls.mostRecent().args[1]).toBeDefined();
-    });
-
-    it ('should pass data by reference to the executed action', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      const data = {
-        internal: 5
+  describe('state is array of objects', () => {
+    let state: object[];
+    let initialState = [
+      {
+        first: true,
+        second: false
+      },
+      {
+        first: false,
+        second: true
       }
-      
-      //act
-      service.apply(actionSpy, data);
-      
-      //assert
-      expect(actionSpy.execute.calls.mostRecent().args[2]).toBe(data);
-    });
+    ];
 
-    it ('should pass correct data to the executed action', () => {
-      //arrange
-      const actionSpy = jasmine.createSpyObj('actionSpy', ['execute']);
-      
-      //act
-      service.apply(actionSpy, {
-        internal: 5
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NgTaratorModule
+        ],
+        providers: [
+          { provide: TaratorState, useValue: initialState }
+        ]
       });
-      
-      //assert
-      expect(actionSpy.execute.calls.mostRecent().args[2]).toEqual({
-        internal: 5
-      });
+      state = TestBed.inject(TaratorState);
+      service = TestBed.inject(StoreService);
+      initialState[0].first = true;
+      initialState[0].second = false;
+      initialState[1].first = false;
+      initialState[1].second = true;
     });
 
-    it ('should keep working after applying faulty action', () => {
+    it('should be created', () => {
       //arrange
-      const actionMock = {
-        execute: (state: any, callback: () => void, data?: any): void => {
-          throw new Error();
-        }
-      };
-      let func = () => service.apply(actionMock);
-      
-      //act
-      //assert
-      expect(func).not.toThrow();      
-    });
-
-    it ('should log an error to the console after applying faulty action', () => {
-      //arrange
-      const actionMock = {
-        execute: (state: any, callback: () => void, data?: any): void => {
-          throw new Error();
-        }
-      };
-      spyOn(console, 'log');
 
       //act
-      service.apply(actionMock);
 
       //assert
-      expect(console.log).toHaveBeenCalled();
+      expect(service).toBeTruthy();
     });
   });
 });

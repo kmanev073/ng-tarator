@@ -7,7 +7,6 @@ describe('StoreService', () => {
   let service: StoreService;
 
   describe('state is primitive value', () => {
-    let state: number;
     let initialState = 6;
 
     beforeEach(() => {
@@ -19,7 +18,6 @@ describe('StoreService', () => {
           { provide: TaratorState, useValue: initialState }
         ]
       });
-      state = TestBed.inject(TaratorState);
       service = TestBed.inject(StoreService);
       initialState = 6;
     });
@@ -39,12 +37,11 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(state).toBe(initialState);
+      expect(service.state).toBe(initialState);
     });
   });
 
   describe('state is array of primitive values', () => {
-    let state: number[];
     let initialState = [1, 2, 3];
 
     beforeEach(() => {
@@ -56,7 +53,6 @@ describe('StoreService', () => {
           { provide: TaratorState, useValue: initialState }
         ]
       });
-      state = TestBed.inject(TaratorState);
       service = TestBed.inject(StoreService);
       initialState[0] = 1;
       initialState[1] = 2;
@@ -74,7 +70,6 @@ describe('StoreService', () => {
   });
 
   describe('state is object', () => {
-    let state: object;
     let initialState = {
       initialState: true
     };
@@ -88,7 +83,6 @@ describe('StoreService', () => {
           { provide: TaratorState, useValue: initialState }
         ]
       });
-      state = TestBed.inject(TaratorState);
       service = TestBed.inject(StoreService);
       initialState.initialState = true;
     });
@@ -108,7 +102,7 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(state).toBe(initialState);
+      expect(service.state).toBe(initialState);
     });
 
     it('should not modify the initial state object on initialization', () => {
@@ -117,7 +111,7 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(state).toEqual({
+      expect(service.state).toEqual({
         initialState: true
       });
     });
@@ -132,7 +126,7 @@ describe('StoreService', () => {
         service.apply(action);
 
         //assert
-        expect(state).toBe(initialState);
+        expect(service.state).toBe(initialState);
       });
 
       it ('should not modify the state object', () => {
@@ -143,7 +137,7 @@ describe('StoreService', () => {
         service.apply(action);
 
         //assert
-        expect(state).toEqual({
+        expect(service.state).toEqual({
           initialState: true
         });
       }); 
@@ -292,7 +286,7 @@ describe('StoreService', () => {
 
         service.stateChanged.subscribe(() => {
           //assert
-          expect((state as any).initialState).toEqual(false);
+          expect((service.state as any).initialState).toEqual(false);
           done();
         });
 
@@ -310,7 +304,7 @@ describe('StoreService', () => {
 
         service.stateChanged.subscribe(() => {
           //assert
-          expect(state).toBe(initialState);
+          expect(service.state).toBe(initialState);
           done();
         });
 
@@ -351,7 +345,6 @@ describe('StoreService', () => {
   });
 
   describe('state is array of objects', () => {
-    let state: object[];
     let initialState = [
       {
         first: true,
@@ -372,7 +365,6 @@ describe('StoreService', () => {
           { provide: TaratorState, useValue: initialState }
         ]
       });
-      state = TestBed.inject(TaratorState);
       service = TestBed.inject(StoreService);
       initialState[0].first = true;
       initialState[0].second = false;

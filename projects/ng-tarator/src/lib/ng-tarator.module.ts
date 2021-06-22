@@ -1,10 +1,4 @@
 import { NgModule } from '@angular/core';
-@NgModule({
-  declarations: [
-  ],
-  imports: [
-  ],
-  exports: [
-  ]
-})
+
+@NgModule({ })
 export class NgTaratorModule { }

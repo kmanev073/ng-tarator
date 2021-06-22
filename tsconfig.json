@@ -20,10 +20,6 @@
       "ng-tarator": [
         "dist/ng-tarator/ng-tarator",
         "dist/ng-tarator"
-      ],
-      "tarator": [
-        "dist/tarator/tarator",
-        "dist/tarator"
       ]
     },
     "lib": [

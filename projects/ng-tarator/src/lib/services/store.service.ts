@@ -23,30 +23,34 @@ export class StoreService<S = any> {
 
   private readonly stateLog: string[] = [];
   
-  constructor(@Inject(TaratorState) private readonly stateObject: S, @Inject(TaratorStateLogLength) private readonly stateLogLength: number = 0) {
+  constructor(@Inject(TaratorState) private readonly state: S, @Inject(TaratorStateLogLength) private readonly stateLogLength: number = 0) {
     if (stateLogLength) {
       this.stateLogLength = stateLogLength;
     }
 
     if (stateLogLength) {
-      this.stateLog.push(JSON.stringify(stateObject));
+      this.stateLog.push(JSON.stringify(state));
     }
   }
 
   apply<D = any>(action: Action<S, D>, data?: D) {
     try {
-      action.execute(this.stateObject, this.afterActionApplied, data);
+      action.execute(this.state, this.afterActionApplied, data);
     } catch (exception) {
       console.log('An exception was thrown while executing tarator action (possible inconsistent state):', exception);
     }
   }
 
-  public afterActionApplied = () => {
+  getState(): S {
+    return this.state;
+  }
+
+  private afterActionApplied = () => {
     if (this.stateLogLength) {
       if (this.stateLog.length >= this.stateLogLength){
         this.stateLog.shift();
       }
-      this.stateLog.push(JSON.stringify(this.stateObject)); 
+      this.stateLog.push(JSON.stringify(this.state)); 
     }
 
     this.stateChangedSubject.next();

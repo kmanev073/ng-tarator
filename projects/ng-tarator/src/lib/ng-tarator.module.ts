@@ -1,16 +1,10 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { StoreService } from './services/store.service';
-
+import { NgModule } from '@angular/core';
 @NgModule({
-
+  declarations: [
+  ],
+  imports: [
+  ],
+  exports: [
+  ]
 })
-export class NgTaratorModule { 
-  static forRoot(state: Object): ModuleWithProviders<NgTaratorModule> {
-    return {
-      ngModule: NgTaratorModule,
-      providers: [
-        { provide: StoreService, useValue: new StoreService(state) }
-      ]
-    }
-  }
-}
+export class NgTaratorModule { }

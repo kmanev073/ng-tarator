@@ -11,8 +11,8 @@ export class SimpleAction<S = any, D = any> implements Action{
   execute(state: any, callback: () => void, data?: any): void {
     try {
       this.effect(state, data);
-    } catch (exception) {
-      console.log('An exception was thrown in tarator simple action (possible inconsistent state):', exception);
+    } catch (error) {
+      console.log('An error occurred in tarator simple action (possible inconsistent state):', error);
     }
     callback();
   }

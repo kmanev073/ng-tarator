@@ -30,15 +30,16 @@ export class OverrideAction<S = any, D = any, O = any> implements Action {
           (observableData: O) => {
             try {
               this.subscriber(state, observableData, data);
-            } catch (exception) {
-              console.log('An exception was thrown in tarator override action (possible inconsistent state):', exception);
+            } catch (error) {
+              console.log('An error occurred in tarator override action (possible inconsistent state):', error);
             }
             
             callback();
             this.shouldSubscribe = true;
           },
           error => {
-            console.log('Error occurred in tarator override action observable (possible inconsistent state):', error)
+            console.log('Error occurred in tarator override action observable (possible inconsistent state):', error);
+            
             this.shouldSubscribe = true;
           }
         );

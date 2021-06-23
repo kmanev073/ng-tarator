@@ -33,12 +33,21 @@ export class StoreService<S = any> {
     }
   }
 
-  apply<D = any>(action: Action<S, D>, data?: D) {
+  apply<D = any>(action: Action<S, D>, data?: D): Observable<void> {
+    const resultSubject: Subject<void> = new Subject();
+
     try {
-      action.execute(this.state, this.afterActionApplied, data);
-    } catch (exception) {
-      console.log('An exception was thrown while executing tarator action (possible inconsistent state):', exception);
+      action.execute(this.state, () => {
+        this.afterActionApplied();
+        resultSubject.next();
+        resultSubject.complete();
+      }, data);
+    } catch (error) {
+      console.log('An error occurred while executing tarator action (possible inconsistent state):', error);
+      resultSubject.error(error);
     }
+
+    return resultSubject.asObservable();
   }
 
   getState(): S {

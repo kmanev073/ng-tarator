@@ -30,8 +30,8 @@ export class StrictAction<S = any, D = any, O = any> implements Action {
           (observableData: O) => {
             try {
               this.subscriber(state, observableData, data);
-            } catch (exception) {
-              console.log('An exception was thrown in tarator strict action (possible inconsistent state):', exception);
+            } catch (error) {
+              console.log('An error occurred in tarator strict action (possible inconsistent state):', error);
             }
 
             callback();

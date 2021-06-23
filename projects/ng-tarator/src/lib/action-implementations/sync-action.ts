@@ -24,7 +24,7 @@ export class SyncAction<S = any, D = any, O = any> implements Action {
   execute(state: S, callback: () => void, data?: D): void {
     if (this.shouldSubscribe) {
       this.shouldSubscribe = false;
-      let unsubscribeSubject: Subject<void> = new Subject<void>();
+      const unsubscribeSubject: Subject<void> = new Subject<void>();
 
       this.subject
         .pipe(
@@ -34,8 +34,8 @@ export class SyncAction<S = any, D = any, O = any> implements Action {
         .subscribe((observableData: O) => {
           try {
             this.subscriber(state, observableData, data);
-          } catch (exception) {
-            console.log('An exception was thrown in tarator sync action (possible inconsistent state):', exception);
+          } catch (error) {
+            console.log('An error occurred in tarator sync action (possible inconsistent state):', error);
           }
 
           callback();
@@ -46,10 +46,11 @@ export class SyncAction<S = any, D = any, O = any> implements Action {
           }
         },
         error => {
-          console.log('Error occurred in tarator sync action observable (possible inconsistent state):', error)
+          console.log('Error occurred in tarator sync action observable (possible inconsistent state):', error);
           this.cleanUp();
         },
-        () => unsubscribeSubject.complete());
+        () => unsubscribeSubject.complete()
+      );
     }
 
     this.executedCount++;

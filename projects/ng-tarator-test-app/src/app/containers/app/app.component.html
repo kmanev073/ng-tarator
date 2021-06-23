@@ -3,4 +3,11 @@
     <a class="navbar-brand" href="#">NgTaratorTestApp</a>
   </div>
 </nav>
-<router-outlet></router-outlet>
+<main class="container">
+  <div class="d-flex justify-content-center p-5" *ngIf="state.appLoading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</main>

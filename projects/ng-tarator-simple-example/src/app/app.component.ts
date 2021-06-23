@@ -10,11 +10,36 @@ import { State } from './state/state';
 })
 export class AppComponent {
 
-  title = 'ng-tarator-simple-example';
-
   public state: State;
 
-  constructor(public storeService: StoreService<State>, public actionService: ActionService) {
+  constructor(private storeService: StoreService<State>, private actionService: ActionService) {
     this.state = storeService.getState();
+  }
+
+  onButtonClick(button: string) {
+    switch (button) {
+      case 'component':
+        this.storeService.apply(this.actionService.newComponent);
+        break;
+      case 'material':
+        this.storeService.apply(this.actionService.angularMaterial);
+        break;
+      case 'pwa':
+        this.storeService.apply(this.actionService.addPwaSupport);
+        break;
+      case 'dependency':
+        this.storeService.apply(this.actionService.addDependency);
+        break;
+      case 'test':
+        this.storeService.apply(this.actionService.runAndWatchTests);
+        break;
+      case 'build':
+        this.storeService.apply(this.actionService.buildForProduction)
+        break;
+    }
+  }
+
+  openGitHub() {
+    this.storeService.apply(this.actionService.openGitHub)
   }
 }

@@ -11,27 +11,31 @@ export class ActionService {
 
   }
 
-  newComponentClicked = new SimpleAction(
+  newComponent = new SimpleAction(
     (state: State) => state.command = 'ng generate component xyz'
   );
 
-  angularMaterialClicked = new SimpleAction(
+  angularMaterial = new SimpleAction(
     (state: State) => state.command = 'ng add @angular/material'
   );
 
-  addPwaSupportClicked = new SimpleAction(
+  addPwaSupport = new SimpleAction(
     (state: State) => state.command = 'ng add @angular/pwa'
   );
 
-  addDependencyClicked = new SimpleAction(
+  addDependency = new SimpleAction(
     (state: State) => state.command = 'ng add _____'
   );
 
-  runAndWatchTestsClicked = new SimpleAction(
+  runAndWatchTests = new SimpleAction(
     (state: State) => state.command = 'ng test'
   );
 
-  buildForProductionClicked = new SimpleAction(
+  buildForProduction = new SimpleAction(
     (state: State) => state.command = 'ng build'
+  );
+
+  openGitHub = new SimpleAction(
+    () => window.open('https://github.com/kmanev073/ng-tarator', "_blank")
   );
 }

@@ -37,7 +37,7 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(service.state).toBe(initialState);
+      expect(service.getState()).toBe(initialState);
     });
   });
 
@@ -102,7 +102,7 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(service.state).toBe(initialState);
+      expect(service.getState()).toBe(initialState);
     });
 
     it('should not modify the initial state object on initialization', () => {
@@ -111,7 +111,7 @@ describe('StoreService', () => {
       //act
         
       //assert
-      expect(service.state).toEqual({
+      expect(service.getState()).toEqual({
         initialState: true
       });
     });
@@ -126,7 +126,7 @@ describe('StoreService', () => {
         service.apply(action);
 
         //assert
-        expect(service.state).toBe(initialState);
+        expect(service.getState()).toBe(initialState);
       });
 
       it ('should not modify the state object', () => {
@@ -137,7 +137,7 @@ describe('StoreService', () => {
         service.apply(action);
 
         //assert
-        expect(service.state).toEqual({
+        expect(service.getState()).toEqual({
           initialState: true
         });
       }); 
@@ -232,13 +232,13 @@ describe('StoreService', () => {
             callback();
           }
         };
-        spyOn(service, 'afterActionApplied');
+        spyOn(service as any, 'afterActionApplied');
 
         //act
         service.apply(actionMock);
 
         //assert
-        expect(service.afterActionApplied).toHaveBeenCalled();      
+        expect((service as any).afterActionApplied).toHaveBeenCalled();      
       });
 
       it ('should trigger state update after applied action calls the callback', () => {
@@ -286,7 +286,7 @@ describe('StoreService', () => {
 
         service.stateChanged.subscribe(() => {
           //assert
-          expect((service.state as any).initialState).toEqual(false);
+          expect((service.getState() as any).initialState).toEqual(false);
           done();
         });
 
@@ -304,7 +304,7 @@ describe('StoreService', () => {
 
         service.stateChanged.subscribe(() => {
           //assert
-          expect(service.state).toBe(initialState);
+          expect(service.getState()).toBe(initialState);
           done();
         });
 

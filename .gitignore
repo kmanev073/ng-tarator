@@ -43,3 +43,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+projects/ng-tarator-test-app/src/assets/images
+projects/ng-tarator-test-app/src/assets/questions.json

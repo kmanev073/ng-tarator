@@ -1,1 +1,25 @@
-<p>test works!</p>
+<h1 class="text-success" *ngIf="state.currentTest.submitted && state.currentTest.mistakes <= 9">Passed with {{ state.currentTest.mistakes }} mistakes!</h1>
+<h1 class="text-danger" *ngIf="state.currentTest.submitted && state.currentTest.mistakes > 9">Failed with {{ state.currentTest.mistakes }} mistakes!</h1>
+<div class="bg-light my-3 p-5 rounded" *ngFor="let question of state.currentTest.questions; let i = index">
+  <h2 [class.text-success]="state.currentTest.submitted && question.correctAnswerId === state.currentTest.questionAnswers[question.id]"
+      [class.text-danger]="state.currentTest.submitted && question.correctAnswerId !== state.currentTest.questionAnswers[question.id]">
+    {{ i + 1 }}. {{ question.text }}
+  </h2>
+  <img class="my-3" src="/assets/images/{{ question.id }}.png" *ngIf="question.hasImage">
+  <div class="form-check" *ngFor="let answer of question.answers; let j = index">
+    <input class="form-check-input" type="radio" name="_{{i}}" id="_{{i}}_{{j}}"
+           [class.bg-success]="state.currentTest.submitted && answer.id === question.correctAnswerId"
+           [class.bg-danger]="state.currentTest.submitted && answer.id === state.currentTest.questionAnswers[question.id] && answer.id !== question.correctAnswerId"
+           [checked]="state.currentTest && state.currentTest.questionAnswers[question.id] === answer.id"
+           (change)="onSelectAnswer(question.id, answer.id)">
+    <label class="form-check-label" for="_{{i}}_{{j}}">
+      <p>{{ answer.text }}</p>
+      <img src="/assets/images/{{ answer.id }}.png" *ngIf="answer.hasImage">
+    </label>
+  </div>
+</div>
+<h1 class="text-success" *ngIf="state.currentTest.submitted && state.currentTest.mistakes <= 9">Passed with {{ state.currentTest.mistakes }} mistakes!</h1>
+<h1 class="text-danger" *ngIf="state.currentTest.submitted && state.currentTest.mistakes > 9">Failed with {{ state.currentTest.mistakes }} mistakes!</h1>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button (click)="onSubmitTest()" class="btn btn-primary mb-3" type="button" [disabled]="state.currentTest.readyToSubmit === false || state.currentTest.submitted">Submit</button>
+</div>

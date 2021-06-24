@@ -10,4 +10,13 @@ import { State } from '../../state/state';
 })
 export class HomeComponent {
 
+  state: State;
+
+  constructor(private readonly storeService: StoreService<State>, private readonly actionService: ActionService) {
+    this.state = storeService.getState();
+  }
+
+  newTestClick() {
+    this.storeService.apply(this.actionService.clearOldTest);
+  }
 }

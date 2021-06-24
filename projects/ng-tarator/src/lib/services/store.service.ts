@@ -1,5 +1,5 @@
 import { Injectable, Inject, InjectionToken } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, ReplaySubject } from 'rxjs';
 import { Action } from '../interfaces/action.interface';
 
 export const TaratorState = new InjectionToken<any>('TaratorState', {
@@ -19,6 +19,7 @@ export class StoreService<S = any> {
   
   private readonly stateChangedSubject: Subject<void> = new Subject();
   
+  //TODO: pass action name
   public readonly stateChanged: Observable<void> = this.stateChangedSubject.asObservable();
 
   private readonly stateLog: string[] = [];
@@ -34,7 +35,7 @@ export class StoreService<S = any> {
   }
 
   apply<D = any>(action: Action<S, D>, data?: D): Observable<void> {
-    const resultSubject: Subject<void> = new Subject();
+    const resultSubject: ReplaySubject<void> = new ReplaySubject();
 
     try {
       action.execute(this.state, () => {

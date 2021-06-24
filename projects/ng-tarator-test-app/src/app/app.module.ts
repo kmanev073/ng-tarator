@@ -8,6 +8,7 @@ import { HomeComponent } from './containers/home/home.component';
 import { TestComponent } from './containers/test/test.component';
 import { TaratorState } from 'ng-tarator';
 import { State } from './state/state';
+import { StoreService } from 'projects/ng-tarator/src/public-api';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { State } from './state/state';
     HttpClientModule
   ],
   providers: [
-    { provide: TaratorState, useValue: new State() }
+    { provide: TaratorState, useValue: new State() },
+    StoreService
   ],
   bootstrap: [AppComponent]
 })

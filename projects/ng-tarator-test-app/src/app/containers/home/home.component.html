@@ -1,15 +1,15 @@
 <div class="bg-light my-3 p-5 rounded">
   <h1>New Test</h1>
-  <p class="lead">Use this option if you want to start a new test. Any unfinished attempts will be lost.</p>
+  <p class="lead">Use this option if you want to start a new test. Any previous unfinished attempts or attempts without at least one answered question will be lost.</p>
   <a class="btn btn-lg btn-primary" (click)="newTestClick()" routerLink="test" role="button">Start new test &raquo;</a>
 </div>
 <div class="bg-light my-3 p-5 rounded" *ngIf="state.hasCurrentTest">
   <h1>Continue where You Left Off</h1>
-  <p class="lead">Use this option if you had to close a previous test session and you want to continue now.</p>
+  <p class="lead">Use this option if you had to close a previous test session and you want to continue now or if you want to take a look at your last submitted attempt.</p>
   <a class="btn btn-lg btn-primary" routerLink="test" role="button">Back to the test &raquo;</a>
 </div>
 <div class="bg-light my-3 p-5 rounded">
   <h1>Statistics</h1>
-  <p class="lead">Use this option if you want to see how much times does one test take to complete, how many mistakes you did and etc.</p>
+  <p class="lead">Use this option if you want to see how many mistakes you did and etc.</p>
   <a class="btn btn-lg btn-primary" href="#" role="button">Check the stats &raquo;</a>
 </div>

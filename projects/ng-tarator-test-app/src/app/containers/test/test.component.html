@@ -1,7 +1,8 @@
 <h1 class="text-success" *ngIf="state.currentTest.submitted && state.currentTest.mistakes <= 9">Passed with {{ state.currentTest.mistakes }} mistakes!</h1>
 <h1 class="text-danger" *ngIf="state.currentTest.submitted && state.currentTest.mistakes > 9">Failed with {{ state.currentTest.mistakes }} mistakes!</h1>
 <div class="bg-light my-3 p-5 rounded" *ngFor="let question of state.currentTest.questions; let i = index">
-  <h2 [class.text-success]="state.currentTest.submitted && question.correctAnswerId === state.currentTest.questionAnswers[question.id]"
+  <h2 class="mb-3"
+      [class.text-success]="state.currentTest.submitted && question.correctAnswerId === state.currentTest.questionAnswers[question.id]"
       [class.text-danger]="state.currentTest.submitted && question.correctAnswerId !== state.currentTest.questionAnswers[question.id]">
     {{ i + 1 }}. {{ question.text }}
   </h2>
@@ -11,6 +12,7 @@
            [class.bg-success]="state.currentTest.submitted && answer.id === question.correctAnswerId"
            [class.bg-danger]="state.currentTest.submitted && answer.id === state.currentTest.questionAnswers[question.id] && answer.id !== question.correctAnswerId"
            [checked]="state.currentTest && state.currentTest.questionAnswers[question.id] === answer.id"
+           [disabled]="state.currentTest.submitted"
            (change)="onSelectAnswer(question.id, answer.id)">
     <label class="form-check-label" for="_{{i}}_{{j}}">
       <p>{{ answer.text }}</p>

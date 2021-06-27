@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OverrideAction, StoreService } from 'ng-tarator';
 import { SimpleAction } from 'projects/ng-tarator/src/public-api';
-import { forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { QuestionBackend } from '../models-backend/question.backend';
 import { Question } from '../models/question';
 import { QuestionStatus } from '../models/question-status';
@@ -43,7 +43,7 @@ export class ActionService {
   );
 
   loadAllQuestions = new OverrideAction(
-    () => this.httpClient.get<QuestionBackend[]>('http://40bt.kaloyanmanev.com/assets/questions.json'),
+    () => this.httpClient.get<QuestionBackend[]>(`${environment.appUrl}/assets/questions.json`),
     (state: State, observableData: QuestionBackend[]) => {
       state.allQuestions = observableData.map(question => ({
         id: question.Id,

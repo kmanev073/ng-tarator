@@ -1,0 +1,4 @@
+.form-check-input:disabled, .form-check-input:disabled~.form-check-label, .form-check-input[disabled]~.form-check-label {
+  opacity: 1;
+  filter: alpha(opacity=100); /* For IE8 and earlier */
+}
